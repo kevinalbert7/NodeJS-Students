@@ -9,12 +9,12 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
     const student = {
-        ...req.body,
-        id: students.length + 1
-      }
+        id: students.length + 1,
+        ...req.body
+    }
     
-      students = [ ...students, student ]
-      res.json(student)
+    students = [ ...students, student ]
+    res.json(student)
 })
 
 module.exports = app
