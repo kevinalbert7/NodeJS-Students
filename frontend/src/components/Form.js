@@ -1,7 +1,13 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom' 
+
+import { StudentContext } from '../contexts/Students'
 
 const Form = () => {
-    const [name, setName] = useState("")
+    const { getStudents, setNewStudent } = useContext(StudentContext)
+    const [name, setName] = useState('')
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     const handleNameChange = e => {
         setName(e.target.value)
@@ -21,29 +27,39 @@ const Form = () => {
             },
             body: JSON.stringify(student)
         })
-
-        setName("")
+            .then(response => response.json())
+            .then(data => {
+                setNewStudent(data)
+                navigate('/validation')
+                getStudents()
+                setName('')
+                setError('')
+            })
+            .catch(error => setError('Already existing student!'))
     }
 
   return (
-    <form>
-        <div className="mb-3">
-            <label for="exampleInputEmail1" className="form-label">Name</label>
-            <input 
-                type="text" 
-                className="form-control" 
-                value={name} 
-                onChange={handleNameChange} 
-            />
-        </div>
-        <button 
-            type="submit" 
-            className="btn btn-primary"
-            onClick={handleSubmit}
-        >
-            Submit
-        </button>
-    </form>
+    <>
+        <form>
+            <div className='mb-3'>
+                <label htmlFor='exampleInputEmail1' className='form-label'>Name</label>
+                <input 
+                    type='text' 
+                    className='form-control' 
+                    value={name} 
+                    onChange={handleNameChange} 
+                />
+            </div>
+            <button 
+                type='submit' 
+                className='btn btn-primary'
+                onClick={handleSubmit}
+            >
+                Submit
+            </button>
+        </form>
+        {error && <p>{error}</p>}
+    </>
   )
 }
 

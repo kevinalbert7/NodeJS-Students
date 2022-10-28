@@ -4,19 +4,23 @@ const StudentContext = createContext({})
 
 const StudentProvider = ({ children }) => {
     const [students, setStudents] = useState([])
+    const [newStudent, setNewStudent] = useState(null)
 
     useEffect(() => {
         getStudents()
     }, [])
 
     const getStudents = () => {
-        fetch("http://localhost:5000/students")
+        fetch('http://localhost:5000/students')
             .then(response => response.json())
             .then(data => setStudents(data))
     }
 
     const value = {
-        students
+        students,
+        getStudents,
+        newStudent,
+        setNewStudent
     }
 
     return (
